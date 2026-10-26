@@ -1,0 +1,23 @@
+pkg/reporter/jsonreporter_test.go
+  s_b7fb80852023dd::t_b76ad75c5b85f6 1-79
+pkg/reporter/jsonreporter.go
+  s_b7fb80852023dd::t_365fd568daf6fb 63
+  s_b7fb80852023dd::t_16d67470e28441 26-27
+  s_b7fb80852023dd::t_3ef70a6acc8aa6 120-132
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.51-trip",
+  "base_commit_sha": "936f8f0361367537bfe068e3b580e6ecb1d07f26",
+  "prompts": {},
+  "sessions": {
+    "s_b7fb80852023dd": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1325cd2c-15ac-4360-a739-e1d8f335de29",
+        "model": "grok-4.7"
+      },
+      "human_author": "yinzezhou <yinzezhou@trip.com>"
+    }
+  }
+}
