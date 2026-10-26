@@ -11,15 +11,15 @@ import (
 type jsonReporter struct{}
 
 type latencyStats struct {
-	MinMs  int64 `json:"minMs"`
-	MeanMs int64 `json:"meanMs"`
-	StdMs  int64 `json:"stdMs"`
-	MaxMs  int64 `json:"maxMs"`
-	P99Ms  int64 `json:"p99Ms"`
-	P95Ms  int64 `json:"p95Ms"`
-	P90Ms  int64 `json:"p90Ms"`
-	P75Ms  int64 `json:"p75Ms"`
-	P50Ms  int64 `json:"p50Ms"`
+	MinMs  float64 `json:"minMs"`
+	MeanMs float64 `json:"meanMs"`
+	StdMs  float64 `json:"stdMs"`
+	MaxMs  float64 `json:"maxMs"`
+	P99Ms  float64 `json:"p99Ms"`
+	P95Ms  float64 `json:"p95Ms"`
+	P90Ms  float64 `json:"p90Ms"`
+	P75Ms  float64 `json:"p75Ms"`
+	P50Ms  float64 `json:"p50Ms"`
 }
 
 type histogramPoint struct {
@@ -96,15 +96,15 @@ func (s *jsonReporter) print(params reportParameters) error {
 		ResponseRcodes:           codeTotalsMapped,
 		QuestionTypes:            params.qtypeTotals,
 		LatencyStats: latencyStats{
-			MinMs:  roundDuration(time.Duration(params.hist.Min())).Milliseconds(),
-			MeanMs: roundDuration(time.Duration(params.hist.Mean())).Milliseconds(),
-			StdMs:  roundDuration(time.Duration(params.hist.StdDev())).Milliseconds(),
-			MaxMs:  roundDuration(time.Duration(params.hist.Max())).Milliseconds(),
-			P99Ms:  roundDuration(time.Duration(params.hist.ValueAtQuantile(99))).Milliseconds(),
-			P95Ms:  roundDuration(time.Duration(params.hist.ValueAtQuantile(95))).Milliseconds(),
-			P90Ms:  roundDuration(time.Duration(params.hist.ValueAtQuantile(90))).Milliseconds(),
-			P75Ms:  roundDuration(time.Duration(params.hist.ValueAtQuantile(75))).Milliseconds(),
-			P50Ms:  roundDuration(time.Duration(params.hist.ValueAtQuantile(50))).Milliseconds(),
+			MinMs:  float64(time.Duration(params.hist.Min()).Microseconds()) / 1000,
+			MeanMs: float64(time.Duration(params.hist.Mean()).Microseconds()) / 1000,
+			StdMs:  float64(time.Duration(params.hist.StdDev()).Microseconds()) / 1000,
+			MaxMs:  float64(time.Duration(params.hist.Max()).Microseconds()) / 1000,
+			P99Ms:  float64(time.Duration(params.hist.ValueAtQuantile(99)).Microseconds()) / 1000,
+			P95Ms:  float64(time.Duration(params.hist.ValueAtQuantile(95)).Microseconds()) / 1000,
+			P90Ms:  float64(time.Duration(params.hist.ValueAtQuantile(90)).Microseconds()) / 1000,
+			P75Ms:  float64(time.Duration(params.hist.ValueAtQuantile(75)).Microseconds()) / 1000,
+			P50Ms:  float64(time.Duration(params.hist.ValueAtQuantile(50)).Microseconds()) / 1000,
 		},
 		LatencyDistribution:        res,
 		DohHTTPResponseStatusCodes: params.dohResponseStatusesTotals,
