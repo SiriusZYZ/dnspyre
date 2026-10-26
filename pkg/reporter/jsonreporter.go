@@ -23,8 +23,8 @@ type latencyStats struct {
 }
 
 type histogramPoint struct {
-	LatencyMs int64 `json:"latencyMs"`
-	Count     int64 `json:"count"`
+	LatencyMs float64 `json:"latencyMs"`
+	Count     int64   `json:"count"`
 }
 
 type jsonResult struct {
@@ -60,7 +60,7 @@ func (s *jsonReporter) print(params reportParameters) error {
 		dist := params.hist.Distribution()
 		for _, d := range dist {
 			res = append(res, histogramPoint{
-				LatencyMs: roundDuration(time.Duration(d.To/2 + d.From/2)).Milliseconds(),
+				LatencyMs: histogramLatencyMs(time.Duration(d.To/2 + d.From/2)),
 				Count:     d.Count,
 			})
 		}
@@ -116,4 +116,17 @@ func (s *jsonReporter) print(params reportParameters) error {
 	}
 
 	return json.NewEncoder(params.outputWriter).Encode(result)
+}
+
+// histogramLatencyMs places a bar midpoint into a JSON bucket.
+// Buckets below 1ms are 100µs wide and reported in milliseconds (0, 0.1, 0.2, ...).
+// Buckets at or above 1ms stay 1ms wide.
+func histogramLatencyMs(mid time.Duration) float64 {
+	rounded := roundDuration(mid)
+	if rounded < time.Millisecond {
+		const bucket = 100 * time.Microsecond
+		truncated := rounded / bucket * bucket
+		return float64(truncated) / float64(time.Millisecond)
+	}
+	return float64(rounded.Milliseconds())
 }
